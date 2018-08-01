@@ -1,0 +1,9 @@
+{
+  "name": "jira-demo",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "~4.16.0",
+    "express-http-proxy": "1.2.0"
+  }
+}
