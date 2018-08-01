@@ -6,6 +6,10 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		  	if($cookies.username) {
 		  		console.log('Setting username to '+$cookies.username);
 				$scope.username = $cookies.username;	
+
+			  	$scope.baseUrl = 'proxy'+$scope.config.apibasepath+'/rest/api/latest/search?expand=renderedFields';
+			  	$scope.agileUrl = 'proxy'+$scope.config.apibasepath+'/rest/agile/1.0/issue/rank';
+
 		  	}else{
 			  	$scope.username = $scope.config.defaultusername;
 		  	}
@@ -15,8 +19,6 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 
   	$scope.password = '';
 
-  	let baseUrl = 'proxy/jira/rest/api/latest/search?expand=renderedFields';
-  	let agileUrl = 'proxy/jira/rest/agile/1.0/issue/rank';
 
 	$scope.toDefaultLabelFilter = function(){
 		$scope.labelFilter = 'labels=PPM';
@@ -81,7 +83,7 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		$cookies.username = $scope.username;
       	console.log('feching with '+$scope.labelFilter);
 
-		$http.get(baseUrl+ '&jql='+$scope.config.jql+' AND '+$scope.labelFilter+' ORDER BY '+$scope.config.orderby, 
+		$http.get($scope.baseUrl+ '&jql='+$scope.config.jql+' AND '+$scope.labelFilter+' ORDER BY '+$scope.config.orderby, 
 			{headers: getBasicAuth()}
 	    ).success(function(data) {
 			console.log(data);
@@ -106,7 +108,7 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		$http( 
 			{
 			method: "put",
-			url:agileUrl,
+			url:$scope.agileUrl,
 			headers: headerList,
 			data: body
 			}
