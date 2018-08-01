@@ -1,4 +1,4 @@
-var config = require('../config.json');
+var config = require('.../config.json');
 
 const express = require('express')
 const app = express()
