@@ -9,6 +9,7 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 
 			  	$scope.baseUrl = 'proxy'+$scope.config.apibasepath+'/rest/api/latest/search?expand=renderedFields';
 			  	$scope.agileUrl = 'proxy'+$scope.config.apibasepath+'/rest/agile/1.0/issue/rank';
+				$scope.labelFilter = $scope.config.defaultlabelfilter;
 
 		  	}else{
 			  	$scope.username = $scope.config.defaultusername;
@@ -19,14 +20,16 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 
   	$scope.password = '';
 
-
 	$scope.toDefaultLabelFilter = function(){
-		$scope.labelFilter = 'labels=PPM';
+		$scope.labelFilter = $scope.config.defaultlabelfilter;
 	}
 
-  	$scope.toDefaultLabelFilter();
-
 	$scope.addToLabelFilterAndFetch = function(label) {
+
+		if( !$scope.labelFilter ){
+			$scope.labelFilter = '';
+		}
+
 		$scope.labelFilter = $scope.labelFilter +' AND labels='+ label;
 		console.log('filtering to '+$scope.labelFilter);
 		$scope.fetch();
@@ -39,7 +42,7 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 	};
 
 	$scope.showFilter = function(){
-		same = $scope.labelFilter == 'labels=PPM';
+		same = $scope.labelFilter == $scope.config.defaultlabelfilter;
 		return !same;
 	};
 
@@ -83,7 +86,12 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		$cookies.username = $scope.username;
       	console.log('feching with '+$scope.labelFilter);
 
-		$http.get($scope.baseUrl+ '&jql='+$scope.config.jql+' AND '+$scope.labelFilter+' ORDER BY '+$scope.config.orderby, 
+      	var query = $scope.baseUrl+ '&jql='+$scope.config.jql;
+      	if( $scope.labelFilter ){
+      		query = query +' '+$scope.labelFilter;
+      	}
+
+		$http.get(query+' ORDER BY '+$scope.config.orderby, 
 			{headers: getBasicAuth()}
 	    ).success(function(data) {
 			console.log(data);
