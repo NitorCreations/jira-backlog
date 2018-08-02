@@ -2,18 +2,19 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
   	console.log('mainController.init: '+$cookies.username);
 
 	$http.get('/config').success(function(data) {
-			$scope.config = data;	
-		  	if($cookies.username) {
-		  		console.log('Setting username to '+$cookies.username);
-				$scope.username = $cookies.username;	
+		$scope.config = data;	
+	  	if($cookies.username) {
+	  		console.log('Setting username to '+$cookies.username);
+			$scope.username = $cookies.username;	
+	  	}else{
+		  	$scope.username = $scope.config.defaultusername;
+	  	}
+	  	$scope.baseUrl = 'proxy'+$scope.config.apibasepath+'/rest/api/latest/search?expand=renderedFields';
+	  	$scope.agileUrl = 'proxy'+$scope.config.apibasepath+'/rest/agile/1.0/issue/rank';
+		$scope.labelFilter = $scope.config.defaultlabelfilter;
 
-			  	$scope.baseUrl = 'proxy'+$scope.config.apibasepath+'/rest/api/latest/search?expand=renderedFields';
-			  	$scope.agileUrl = 'proxy'+$scope.config.apibasepath+'/rest/agile/1.0/issue/rank';
-				$scope.labelFilter = $scope.config.defaultlabelfilter;
+	  	console.log('mainController.init: ready for action');
 
-		  	}else{
-			  	$scope.username = $scope.config.defaultusername;
-		  	}
 	}).error(function(data) {
     		console.log('Error: ' + data);
 	});
