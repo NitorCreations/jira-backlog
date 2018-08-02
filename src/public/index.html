@@ -56,7 +56,7 @@
             <td>
               <div class="bs-callout {{ inProgress(issue.fields.status) ? 'bs-callout-success' : 'bs-callout-default'}}">
                 <h6>{{issue.fields.summary}}</h6>
-                  <a href="{{config.jiraserver}}/{{config.apibase}}browse/{{issue.key}}" target="_blank">{{issue.key}}</a>
+                  <a href="{{config.jiraserver}}{{config.apibasepath}}/browse/{{issue.key}}" target="_blank">{{issue.key}}</a>
               </div>
             </td>
             <td class="description">
