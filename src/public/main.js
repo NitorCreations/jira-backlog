@@ -11,6 +11,11 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 	  	}
 	  	$scope.baseUrl = 'proxy'+$scope.config.apibasepath+'/rest/api/latest/search?expand=renderedFields';
 	  	$scope.agileUrl = 'proxy'+$scope.config.apibasepath+'/rest/agile/1.0/issue/rank';
+	  	if($scope.config.jqlHistory){
+	  		$scope.historyAvailable = true;
+	  	}
+		$scope.history = false;	
+
 		$scope.labelFilter = $scope.config.defaultlabelfilter;
 
 	  	console.log('mainController.init: ready for action');
@@ -41,6 +46,16 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		console.log('filtering to '+$scope.labelFilter);
 		$scope.fetch();	
 	};
+
+	$scope.showHistory = function(){
+		$scope.history = true;
+		$scope.fetch();
+	}
+
+	$scope.showCurrent = function(){
+		$scope.history = false;
+		$scope.fetch();
+	}
 
 	$scope.showFilter = function(){
 		same = $scope.labelFilter == $scope.config.defaultlabelfilter;
@@ -87,12 +102,12 @@ var epicsApp = angular.module('epicsApp', ['ngCookies', 'ngSanitize']).controlle
 		$cookies.username = $scope.username;
       	console.log('feching with '+$scope.labelFilter);
 
-      	var query = $scope.baseUrl+ '&jql='+$scope.config.jql;
+      	var query = $scope.baseUrl+ '&jql='+ ($scope.history ? $scope.config.jqlHistory : $scope.config.jql);
       	if( $scope.labelFilter ){
-      		query = query +' '+$scope.labelFilter;
+      		query = query +' '+ $scope.labelFilter;
       	}
 
-		$http.get(query+' ORDER BY '+$scope.config.orderby, 
+		$http.get(query+' ORDER BY '+ ($scope.history ? $scope.config.orderbyHistory : $scope.config.orderby), 
 			{headers: getBasicAuth()}
 	    ).success(function(data) {
 			console.log(data);

@@ -27,7 +27,11 @@
 
       <div class="jumbotron jumbotron-fluid bg-white" >
         <h1 class="display-4">{{config.orgname}} Feature Backlog</h1>
-        <p class="lead" ng-show="tickets">This is our backlog, top-to-bottom in priority order.</p>
+        <p class="lead" ng-show="tickets">This is our backlog, top-to-bottom in priority order. <br/>
+          <button type="submit" class="btn btn-primary" ng-click="showHistory()" ng-hide="history">Show History</button>
+          <button type="submit" class="btn btn-primary" ng-click="showCurrent()" ng-show="history">Show Backlog</button>
+          <button type="submit" class="btn btn-secondary mr-2" ng-click="fetch()">Reload</button>
+        </p>
         <form ng-hide="tickets">
           <hr/>
           <div class="form-group">
@@ -44,6 +48,8 @@
 
 
       <div class="row mb-5">
+
+
       <table class="table" ng-show="tickets">
         <thead>
           <tr>
@@ -64,6 +70,7 @@
 
               <span class="badge badge-success" ng-show="inProgress(issue.fields.status)">In Progress</span>  
               <button type="button" class="btn btn-sm mr-2 btn-outline-{{criticality(label)}}" ng-repeat="label in issue.fields.labels" ng-show="label!='PPM'" ng-click="addToLabelFilterAndFetch(label)" data-toggle="tooltip" title="Filter to this label">{{label}}</button>
+              <span class="badge badge-secondary" ng-repeat="fixVersion in issue.fields.fixVersions">{{fixVersion.name}}</span>
 
               <button type="button" class="btn btn-sm btn-outline-info float-right" ng-click="rank(issue.key, tickets.issues[$index-1].key)" ng-show="$index > 0" data-toggle="tooltip" title="Rank Up"><img src="up.png" height="20" width="20"/></button>
 
